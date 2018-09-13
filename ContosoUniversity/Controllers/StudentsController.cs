@@ -35,7 +35,7 @@ namespace ContosoUniversity.Controllers
 
             ViewData["CurrentFilter"] = searchString;
 
-            var students = from s in _context.Students
+            IQueryable<Student> students = from s in _context.Students
                            select s;
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -70,17 +70,12 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students
+            Student student = await _context.Students
                 .Include(s => s.Enrollments)
                 .ThenInclude(e => e.Course)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-
-            return View(student);
+            return student == null ? NotFound() : (IActionResult)View(student);
         }
 
         // GET: Students/Create
@@ -123,12 +118,8 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.ID == id);
-            if (student == null)
-            {
-                return NotFound();
-            }
-            return View(student);
+            Student student = await _context.Students.SingleOrDefaultAsync(m => m.ID == id);
+            return student == null ? NotFound() : (IActionResult)View(student);
         }
 
         // POST: Students/Edit/5
@@ -142,8 +133,8 @@ namespace ContosoUniversity.Controllers
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
-            if (await TryUpdateModelAsync<Student>(
+            Student studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
+            if (await TryUpdateModelAsync(
                 studentToUpdate,
                 "",
                 s => s.FirstMidName, s => s.LastName, s => s.EnrollmentDate))
@@ -172,7 +163,7 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var student = await _context.Students
+            Student student = await _context.Students
                 .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (student == null)
@@ -195,7 +186,7 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students
+            Student student = await _context.Students
                 .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (student == null)
@@ -212,7 +203,7 @@ namespace ContosoUniversity.Controllers
             catch (DbUpdateException /* ex */)
             {
                 //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
+                return RedirectToAction(nameof(Delete), new { id, saveChangesError = true });
             }
         }
 

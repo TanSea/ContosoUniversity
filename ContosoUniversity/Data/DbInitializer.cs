@@ -1,8 +1,6 @@
 ﻿using ContosoUniversity.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ContosoUniversity.Data
 {
@@ -18,7 +16,7 @@ namespace ContosoUniversity.Data
                 return;   // DB has been seeded
             }
 
-            var students = new Student[]
+            Student[] students = new Student[]
             {
             new Student{FirstMidName="Carson",LastName="Alexander",EnrollmentDate=DateTime.Parse("2005-09-01")},
             new Student{FirstMidName="Meredith",LastName="Alonso",EnrollmentDate=DateTime.Parse("2002-09-01")},
@@ -35,7 +33,7 @@ namespace ContosoUniversity.Data
             }
             context.SaveChanges();
 
-            var courses = new Course[]
+            Course[] courses = new Course[]
             {
             new Course{CourseID=1050,Title="Chemistry",Credits=3},
             new Course{CourseID=4022,Title="Microeconomics",Credits=3},
@@ -51,7 +49,7 @@ namespace ContosoUniversity.Data
             }
             context.SaveChanges();
 
-            var enrollments = new Enrollment[]
+            Enrollment[] enrollments = new Enrollment[]
             {
             new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},
             new Enrollment{StudentID=1,CourseID=4022,Grade=Grade.C},
