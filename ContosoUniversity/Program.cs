@@ -13,9 +13,9 @@ namespace ContosoUniversity
         {
             IWebHost host = BuildWebHost(args);
 
-            using (var scope = host.Services.CreateScope())
+            using (IServiceScope scope = host.Services.CreateScope())
             {
-                var services = scope.ServiceProvider;
+                IServiceProvider services = scope.ServiceProvider;
                 try
                 {
                     var context = services.GetRequiredService<SchoolContext>();
